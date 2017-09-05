@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="debug" verbose="4">
+
+    <!--<test name="UAT-17 DataTiler heart beat check">
+        <classes>
+            <class name="eu.datatiler.tests.HeartBeatCheck"/>
+        </classes>
+    </test>
+
+    <test name="UAT-3, UAT-5, UAT-12, UAT-13, UAT-14, UAT-15 Login tests">
+        <classes>
+            <class name="eu.datatiler.tests.LoginTests"/>
+        </classes>
+    </test>
+
+    <test name="UAT-27 Change user name">
+        <classes>
+            <class name="eu.datatiler.tests.UserTests"/>
+        </classes>
+    </test>
+
+    <test name="UAT-31, UAT-32, UAT-34, UAT-36, UAT-42, UAT-44 Folders tests">
+        <classes>
+            <class name="eu.datatiler.tests.FolderTests"/>
+        </classes>
+    </test>
+
+    <test name="UAT-393 Ensure that Viewer can't access administration page">
+        <classes>
+            <class name="eu.datatiler.tests.AccessTests"/>
+        </classes>
+    </test>
+
+    <test name="UAT-395 Rename entity">
+        <classes>
+            <class name="eu.datatiler.tests.ProjectTests"/>
+        </classes>
+    </test>
+
+    <test name="UAT-397 Ensure link to public dashboard is copied to clipboard">
+        <classes>
+            <class name="eu.datatiler.tests.ClipboardTest"/>
+        </classes>
+    </test>
+-->
+    <!--<test name="UAT-396 Ensure categories are loaded">-->
+        <!--<classes>-->
+            <!--<class name="eu.datatiler.tests.CrosstableTests"/>-->
+        <!--</classes>-->
+    <!--</test>-->
+<!--
+    <test name="UAT-23 Check Shared with me section">
+        <classes>
+            <class name="eu.datatiler.tests.SharedItemsTest"/>
+        </classes>
+    </test>
+
+    <test name="UAT-401, UAT-403 Creating project and exporting dashboard in sub-folder">
+        <classes>
+            <class name="eu.datatiler.tests.CreationTests"/>
+        </classes>
+    </test>
+
+    <test name="UAT-402 Cteation of a Dashboard in sub-folder">
+        <classes>
+            <class name="eu.datatiler.tests.CreateDashboardTest"/>
+        </classes>
+    </test>-->
+
+    <!--<test name="UAT-405, UAT-406, UAT-407, UAT-408 Control Tests">-->
+        <!--<classes>-->
+            <!--<class name="eu.datatiler.tests.ControlTests"/>-->
+        <!--</classes>-->
+    <!--</test>-->
+
+    <!--<test name="UAT-411 Creating text widget with formatting">-->
+        <!--<classes>-->
+            <!--<class name="eu.datatiler.tests.WidgetTests"/>-->
+        <!--</classes>-->
+    <!--</test>-->
+
+    <test name="UAT-395 Rename entity">
+        <classes>
+            <class name="eu.datatiler.tests.ProjectTests"/>
+        </classes>
+    </test>
+
+    <!--<test name="UAT-770 Removing the variable in 'Show similar' block">-->
+        <!--<classes>-->
+            <!--<class name="eu.datatiler.tests.EncoderTest"/>-->
+        <!--</classes>-->
+    <!--</test>-->
+</suite>

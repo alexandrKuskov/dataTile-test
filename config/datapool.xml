@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<data>
+	<browser type="chrome">
+		<credentials name="testCredentials">
+			<arg>liudmyla@qa-testlab.com</arg>
+			<arg>258852</arg>
+		</credentials>
+	</browser>
+	<browser type="firefox">
+		<credentials name="testCredentials">
+            <arg>liudmyla@qa-testlab.com</arg>
+            <arg>258852</arg>
+		</credentials>
+	</browser>
+    <browser type="ie">
+        <credentials name="testCredentials">
+            <arg>liudmyla@qa-testlab.com</arg>
+            <arg>258852</arg>
+        </credentials>
+    </browser>
+
+    <browser type="chrome">
+        <credentials name="userCredentials">
+            <arg>uat_viewer@datatiler.eu</arg>
+            <arg>Q89mGeDARIfTF</arg>
+        </credentials>
+    </browser>
+    <browser type="firefox">
+        <credentials name="userCredentials">
+            <arg>uat_viewer@datatiler.eu</arg>
+            <arg>Q89mGeDARIfTF</arg>
+        </credentials>
+    </browser>
+    <browser type="ie">
+        <credentials name="userCredentials">
+            <arg>uat_viewer@datatiler.eu</arg>
+            <arg>Q89mGeDARIfTF</arg>
+        </credentials>
+    </browser>
+
+    <browser type="chrome">
+        <credentials name="dashboardManagerCredentials">
+            <arg>uat_dashboard@datatiler.eu</arg>
+            <arg>EfdeZCk5AJYM2IZ</arg>
+        </credentials>
+    </browser>
+    <browser type="firefox">
+        <credentials name="dashboardManagerCredentials">
+            <arg>uat_dashboard@datatiler.eu</arg>
+            <arg>EfdeZCk5AJYM2IZ</arg>
+        </credentials>
+    </browser>
+    <browser type="ie">
+        <credentials name="dashboardManagerCredentials">
+            <arg>uat_dashboard@datatiler.eu</arg>
+            <arg>EfdeZCk5AJYM2IZ</arg>
+        </credentials>
+    </browser>
+
+    <browser type="chrome">
+        <credentials name="blockedUserCredentials">
+            <arg>uat_blocked_viewer@datatiler.eu</arg>
+            <arg>aV3YTn8VAT1J</arg>
+        </credentials>
+    </browser>
+    <browser type="firefox">
+        <credentials name="blockedUserCredentials">
+            <arg>uat_blocked_viewer@datatiler.eu</arg>
+            <arg>aV3YTn8VAT1J</arg>
+        </credentials>
+    </browser>
+    <browser type="ie">
+        <credentials name="blockedUserCredentials">
+            <arg>uat_blocked_viewer@datatiler.eu</arg>
+            <arg>aV3YTn8VAT1J</arg>
+        </credentials>
+    </browser>
+
+    <browser type="chrome">
+        <credentials name="projectManagerCredentials">
+            <arg>uat_pm@datatiler.eu</arg>
+            <arg>!F7A4ynJrFtTs@</arg>
+        </credentials>
+    </browser>
+    <browser type="firefox">
+        <credentials name="projectManagerCredentials">
+            <arg>uat_pm@datatiler.eu</arg>
+            <arg>!F7A4ynJrFtTs@</arg>
+        </credentials>
+    </browser>
+    <browser type="ie">
+        <credentials name="projectManagerCredentials">
+            <arg>uat_pm@datatiler.eu</arg>
+            <arg>!F7A4ynJrFtTs@</arg>
+        </credentials>
+    </browser>
+
+    <browser type="chrome">
+        <credentials name="adminCredentials">
+            <arg>uat_admin@datatiler.eu</arg>
+            <arg>1echJEoxH0TESVHa</arg>
+        </credentials>
+    </browser>
+    <browser type="firefox">
+        <credentials name="adminCredentials">
+            <arg>uat_admin@datatiler.eu</arg>
+            <arg>1echJEoxH0TESVHa</arg>
+        </credentials>
+    </browser>
+    <browser type="ie">
+        <credentials name="adminCredentials">
+            <arg>uat_admin@datatiler.eu</arg>
+            <arg>1echJEoxH0TESVHa</arg>
+        </credentials>
+    </browser>
+
+    <browser type="chrome">
+        <credentials name="encoderCredentials">
+            <arg>uat_encoder@datatiler.eu</arg>
+            <arg>c2yDHYbO3IYg</arg>
+        </credentials>
+    </browser>
+    <browser type="firefox">
+        <credentials name="encoderCredentials">
+            <arg>uat_encoder@datatiler.eu</arg>
+            <arg>c2yDHYbO3IYg</arg>
+        </credentials>
+    </browser>
+    <browser type="ie">
+        <credentials name="encoderCredentials">
+            <arg>uat_encoder@datatiler.eu</arg>
+            <arg>c2yDHYbO3IYg</arg>
+        </credentials>
+    </browser>
+
+</data>

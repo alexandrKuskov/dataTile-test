@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="DataTile - Login tests" verbose="4">
+
+               <test name="UAT-17 DataTiler heart beat check">
+                   <classes>
+                       <class name="eu.datatiler.tests.LoginTests"/>
+                   </classes>
+               </test>
+
+
+           <!--<test name="UAT-3, UAT-5, UAT-12, UAT-13, UAT-14, UAT-15 Login tests">-->
+               <!--<classes>-->
+                   <!--<class name="eu.datatiler.tests.LoginTests"/>-->
+               <!--</classes>-->
+           <!--</test>-->
+
+</suite>
