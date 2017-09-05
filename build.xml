@@ -1,0 +1,423 @@
+<project name="DataTile" default="testDataTile">
+    <property name="src.dir"            location="${basedir}${file.separator}src"/>
+    <property name="config.dir"         location="${basedir}${file.separator}config"/>
+    <property name="build.dir"          location="${basedir}${file.separator}build"/>
+    <property name="testng.dir"         location="${config.dir}${file.separator}testNG"/>
+    <property name="lib.dir"            location="${basedir}${file.separator}lib"/>
+    <property name="drivers.dir"        location="${basedir}${file.separator}lib${file.separator}drivers"/>
+    <property name="bin.dir"            location="${build.dir}${file.separator}bin"/>
+    <property name="jar.dir"            location="${build.dir}${file.separator}jar"/>
+    <property name="report.dir"         location="${build.dir}${file.separator}report"/>
+    <property name="log.dir"            location="${build.dir}${file.separator}logs"/>
+    <property name="image.dir"          location="${report.dir}"/>
+    <property name="reportNGcss"        location="${basedir}${file.separator}config${file.separator}reportStyle.css"/>
+    <property name="upload.dir"         value="${basedir}${file.separator}upload${file.separator}"/>
+    <property name="screenshots.dir"    location="${build.dir}${file.separator}screenshots"/>
+    <property name="test.send.status"   value="false"/>
+
+    <!--Tasks definitions-->
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="${lib.dir}${file.separator}ant${file.separator}ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
+    <taskdef resource="testngtasks" classpath="${lib.dir}${file.separator}testng-6.9.4.jar"/>
+
+
+    <target name="setVariables" description="Set browser, base.url, report directory variables">
+        <if>
+            <isset property="browser"/>
+            <else>
+                <property name="browser" value="chrome"/>
+            </else>
+        </if>
+
+        <if>
+            <isset property="gridStatus"/>
+            <else>
+                <property name="gridStatus" value="false"/>
+            </else>
+        </if>
+
+        <if>
+            <isset property="nodeURL"/>
+            <else>
+                <property name="nodeURL" value="1"/>
+            </else>
+        </if>
+
+        <property name="report.dir"
+                  value="${build.dir}${file.separator}report${file.separator}${file.separator}${browser}"/>
+
+        <if>
+            <isset property="base.url"/>
+            <else>
+              <!--  <property name="base.url" value="https://test.datatile.eu/"/> -->
+                <property name="base.url" value="http://develop.labs.datatile.eu/"/>
+            </else>
+        </if>
+
+        <if>
+            <isset property="build.version"/>
+            <else>
+               <property name="build.version" value="v.dev-1641.cce22c7"/>
+        <!--   <property name="build.version" value="1b73235.2132.develop"/> -->
+      </else>
+  </if>
+
+  <if>
+      <isset property="build.platform"/>
+      <else>
+          <property name="build.platform" value="windows"/>
+      </else>
+  </if>
+
+  <if>
+      <equals arg1="${test.send.status}" arg2="true"/>
+      <then>
+          <property name="jira.testListener" value="com.qatestlab.testrail.TestListener"/>
+      </then>
+      <else>
+          <property name="jira.testListener" value=""/>
+      </else>
+  </if>
+
+</target>
+
+<target name="clean" description="Remove all generated content">
+  <delete dir="${build.dir}"/>
+</target>
+
+<target name="reportDir">
+  <mkdir dir="${report.dir}"/>
+</target>
+
+<target name="logDir">
+  <mkdir dir="${log.dir}"/>
+</target>
+<target name="buildDirs">
+  <mkdir dir="${build.dir}"/>
+  <mkdir dir="${screenshots.dir}"/>
+  <mkdir dir="${jar.dir}"/>
+  <mkdir dir="${bin.dir}"/>
+</target>
+
+
+<target name="prepare" description="Create all needed dirs and build jar file with test classes"
+      depends="reportDir, buildDirs">
+
+  <!--Create required dirs-->
+        <mkdir dir="${jar.dir}"/>
+        <mkdir dir="${bin.dir}"/>
+        <mkdir dir="${report.dir}"/>
+
+        <!--Create one jar file from all test classes-->
+        <path id="classpath">
+            <fileset dir="${lib.dir}" includes="**/*.jar"/>
+        </path>
+        <javac srcdir="${src.dir}"
+               destdir="${bin.dir}"
+               debug="true"
+               includes="**/*.java"
+               classpathref="classpath"
+               includeantruntime="false"
+               debuglevel="lines,vars,source"
+               fork="no"/>
+        <jar destfile="${jar.dir}${file.separator}Tests.jar" basedir="${bin.dir}"/>
+    </target>
+
+    <!--Test targets-->
+    <target name="testDataTile" depends="clean, prepare, setVariables">
+
+        <path id="classpath">
+            <fileset dir="${lib.dir}" includes="*.jar"/>
+         <!--   <fileset dir="E:\ProjectsSpace\datatiler\datatiler-uat\lib\lib" includes="*.jar"/> -->
+
+            <fileset dir="${lib.dir}" includes="${file.separator}reporting${file.separator}*.jar"/>
+            <fileset dir="${lib.dir}${file.separator}testlink" includes="*.jar"/>
+            <fileset dir="${jar.dir}" includes="**/*jar"/>
+        </path>
+
+        <testng classpathref="classpath"
+                outputDir="${report.dir}"
+                workingdir="${report.dir}"
+                failureproperty="testngfail"
+                haltOnfailure="false"
+                delegateCommandSystemProperties="true"
+                useDefaultListeners="false"
+                listeners="org.uncommons.reportng.HTMLReporter, com.qatestlab.reporting.TestListener,
+                 ${jira.testListener}, org.uncommons.reportng.JUnitXMLReporter, org.testng.reporters.XMLReporter">
+
+            <xmlfileset dir="${testng.dir}" includes="01LoginTests.xml"/>
+
+            <sysproperty key="org.uncommons.reportng.title" value="Automated Test Report"/>
+            <sysproperty key="org.uncommons.reportng.frames" value="false"/>
+            <sysproperty key="org.uncommons.reportng.stylesheet" value="${reportNGcss}"/>
+            <sysproperty key="org.uncommons.reportng.escape-output" value="false"/>
+
+            <sysproperty key="drivers.dir" value="${drivers.dir}"/>
+            <sysproperty key="config.dir" value="${config.dir}"/>
+            <sysproperty key="image.dir" value="${image.dir}"/>
+            <sysproperty key="basedir" value="${basedir}"/>
+            <sysproperty key="browser" value="${browser}"/>
+            <sysproperty key="upload.dir" value="${upload.dir}"/>
+            <sysproperty key="report.dir" value="${report.dir}"/>
+            <sysproperty key="screenshots.dir" value="${screenshots.dir}"/>
+            <sysproperty key="build.version" value="${build.version}"/>
+
+            <jvmarg value="-Dfile.encoding=UTF-8"/>
+            <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"/>
+        </testng>
+    </target>
+    <!--Projects init targets-->
+    <target name="Init" depends="clean, prepare, setVariables">
+
+        <path id="classpath">
+            <fileset dir="${lib.dir}" includes="*.jar"/>
+            <!--   <fileset dir="E:\ProjectsSpace\datatiler\datatiler-uat\lib\lib" includes="*.jar"/> -->
+
+            <fileset dir="${lib.dir}" includes="${file.separator}reporting${file.separator}*.jar"/>
+            <fileset dir="${lib.dir}${file.separator}testlink" includes="*.jar"/>
+            <fileset dir="${jar.dir}" includes="**/*jar"/>
+        </path>
+
+        <testng classpathref="classpath"
+                outputDir="${report.dir}"
+                workingdir="${report.dir}"
+                failureproperty="testngfail"
+                haltOnfailure="false"
+                delegateCommandSystemProperties="true"
+                useDefaultListeners="false"
+                listeners="org.uncommons.reportng.HTMLReporter, com.qatestlab.reporting.TestListener,
+                 ${jira.testListener}, org.uncommons.reportng.JUnitXMLReporter, org.testng.reporters.XMLReporter">
+
+
+
+
+            <sysproperty key="org.uncommons.reportng.title" value="Automated Test Report"/>
+            <sysproperty key="org.uncommons.reportng.frames" value="false"/>
+            <sysproperty key="org.uncommons.reportng.stylesheet" value="${reportNGcss}"/>
+            <sysproperty key="org.uncommons.reportng.escape-output" value="false"/>
+
+            <sysproperty key="drivers.dir" value="${drivers.dir}"/>
+            <sysproperty key="config.dir" value="${config.dir}"/>
+            <sysproperty key="image.dir" value="${image.dir}"/>
+            <sysproperty key="basedir" value="${basedir}"/>
+            <sysproperty key="browser" value="${browser}"/>
+            <sysproperty key="upload.dir" value="${upload.dir}"/>
+            <sysproperty key="report.dir" value="${report.dir}"/>
+            <sysproperty key="screenshots.dir" value="${screenshots.dir}"/>
+            <sysproperty key="build.version" value="${build.version}"/>
+
+            <jvmarg value="-Dfile.encoding=UTF-8"/>
+            <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"/>
+        </testng>
+    </target>
+
+    <!--Projects init targets-->
+    <target name="Download" depends="clean, prepare, setVariables">
+
+        <path id="classpath">
+            <fileset dir="${lib.dir}" includes="*.jar"/>
+            <!--   <fileset dir="E:\ProjectsSpace\datatiler\datatiler-uat\lib\lib" includes="*.jar"/> -->
+
+            <fileset dir="${lib.dir}" includes="${file.separator}reporting${file.separator}*.jar"/>
+            <fileset dir="${lib.dir}${file.separator}testlink" includes="*.jar"/>
+            <fileset dir="${jar.dir}" includes="**/*jar"/>
+        </path>
+
+        <testng classpathref="classpath"
+                outputDir="${report.dir}"
+                workingdir="${report.dir}"
+                failureproperty="testngfail"
+                haltOnfailure="false"
+                delegateCommandSystemProperties="true"
+                useDefaultListeners="false"
+                listeners="org.uncommons.reportng.HTMLReporter, com.qatestlab.reporting.TestListener,
+                 ${jira.testListener}, org.uncommons.reportng.JUnitXMLReporter, org.testng.reporters.XMLReporter">
+
+            <!--<xmlfileset dir="${testng.dir}" includes="010DownloadProjects.xml"/>-->
+
+
+            <sysproperty key="org.uncommons.reportng.title" value="Automated Test Report"/>
+            <sysproperty key="org.uncommons.reportng.frames" value="false"/>
+            <sysproperty key="org.uncommons.reportng.stylesheet" value="${reportNGcss}"/>
+            <sysproperty key="org.uncommons.reportng.escape-output" value="false"/>
+
+            <sysproperty key="drivers.dir" value="${drivers.dir}"/>
+            <sysproperty key="config.dir" value="${config.dir}"/>
+            <sysproperty key="image.dir" value="${image.dir}"/>
+            <sysproperty key="basedir" value="${basedir}"/>
+            <sysproperty key="browser" value="${browser}"/>
+            <sysproperty key="upload.dir" value="${upload.dir}"/>
+            <sysproperty key="report.dir" value="${report.dir}"/>
+            <sysproperty key="screenshots.dir" value="${screenshots.dir}"/>
+            <sysproperty key="build.version" value="${build.version}"/>
+
+            <jvmarg value="-Dfile.encoding=UTF-8"/>
+            <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"/>
+        </testng>
+    </target>
+
+    <target name="debug" depends="clean, prepare, setVariables">
+        <path id="classpath">
+            <fileset dir="${lib.dir}" includes="*.jar"/>
+            <fileset dir="${lib.dir}" includes="${file.separator}reporting${file.separator}*.jar"/>
+            <fileset dir="${lib.dir}${file.separator}testlink" includes="*.jar"/>
+            <fileset dir="${jar.dir}" includes="**/*jar"/>
+        </path>
+
+        <testng classpathref="classpath"
+                outputDir="${report.dir}s"
+                workingdir="${report.dir}s"
+                failureproperty="testngfail"
+                haltOnfailure="false"
+                delegateCommandSystemProperties="true"
+                useDefaultListeners="false"
+                listeners="org.uncommons.reportng.HTMLReporter, com.qatestlab.reporting.TestListener,
+                                                               org.uncommons.reportng.JUnitXMLReporter, org.testng.reporters.XMLReporter">
+
+            <xmlfileset dir="${config.dir}" includes="debug.xml"/>
+
+            <sysproperty key="org.uncommons.reportng.title" value="Automated Test Report"/>
+            <sysproperty key="org.uncommons.reportng.frames" value="false"/>
+            <sysproperty key="org.uncommons.reportng.stylesheet" value="${reportNGcss}"/>
+            <sysproperty key="org.uncommons.reportng.escape-output" value="false"/>
+
+            <sysproperty key="drivers.dir" value="${drivers.dir}"/>
+            <sysproperty key="config.dir" value="${config.dir}"/>
+            <sysproperty key="image.dir" value="${image.dir}s"/>
+            <sysproperty key="basedir" value="${basedir}"/>
+            <sysproperty key="browser" value="${browser}"/>
+            <sysproperty key="upload.dir" value="${upload.dir}"/>
+            <sysproperty key="screenshots.dir" value="${screenshots.dir}"/>
+            <sysproperty key="build.version" value="${build.version}"/>
+
+            <jvmarg value="-Dfile.encoding=UTF-8"/>
+
+        </testng>
+    </target>
+
+    <target name="openReport" >
+        <property name="reportDir" location="build/report/html"/>
+
+        <script language="javascript">
+            <![CDATA[
+                                                           var location = "file:///"+project.getProperty("reportDir").toString().replaceAll("\\\\","/")+"/index.html";
+                                                           location = location.toString().replace(/ /g, "%20");
+                                                            // show URL - copy and paste into browser address bar to test location
+
+                                                           var uriLocation = java.net.URI.create(location);
+                                                           var desktop = java.awt.Desktop.getDesktop();
+                                                           desktop.browse(uriLocation);
+                                                       ]]>
+        </script>
+    </target>
+
+    <target name="generateXSLTReport" depends="setVariables">
+        <path id="test.classpath">
+            <fileset dir="${lib.dir}" includes="**/*.jar"/>
+        </path>
+
+        <xslt in="${report.dir}${file.separator}testng-results.xml"
+              style="${config.dir}${file.separator}testng-results.xsl"
+              out="${report.dir}${file.separator}output-xslt${file.separator}index.html" classpathref="test.classpath"
+              processor="SaxonLiaison">
+            <param name="testNgXslt.outputDir" expression="${report.dir}${file.separator}output-xslt"/>
+            <param name="testNgXslt.sortTestCaseLinks" expression="true"/>
+            <param name="testNgXslt.testDetailsFilter" expression="FAIL,SKIP,PASS"/>
+        </xslt>
+        <java jar="${lib.dir}${file.separator}batik${file.separator}batik-rasterizer.jar" fork="true">
+            <arg line="-m image/jpeg"/>
+            <arg line="${report.dir}${file.separator}output-xslt${file.separator}overview-chart.svg"/>
+            <jvmarg value="-Djava.awt.headless=true"/>
+        </java>
+    </target>
+
+    <target name="makePDFReport" depends="setVariables">
+        <makePdfReport html.dir="${report.dir}${file.separator}html"
+                       output.file="${report.dir}${file.separator}Report.pdf"/>
+    </target>
+
+    <macrodef name="makePdfReport">
+        <attribute name="html.dir" default="${report.dir}${file.separator}html"/>
+        <attribute name="output.file" default="${report.dir}${file.separator}Report.pdf"/>
+        <sequential>
+            <java jar="${lib.dir}${file.separator}html2pdf-0.1.jar" fork="true">
+                <arg value="-directory"/>
+                <arg value="@{html.dir}"/>
+                <arg value="-file"/>
+                <arg value="@{output.file}"/>
+                <arg value="-startPages"/>
+                <arg value="index.html"/>
+                <arg value="highlevel_index.html"/>
+            </java>
+        </sequential>
+    </macrodef>
+
+    <target name="makePDFReportSendToMe" depends="generateXSLTReport">
+        <java jar="${lib.dir}${file.separator}htm2pdf.jar" fork="true">
+            <arg value="${report.dir}"/>
+            <arg value="${report.dir}"/>
+            <arg value="${report.dir}${file.separator}output-xslt${file.separator}overview-chart.jpg"/>
+            <arg value="${config.dir}${file.separator}mailSettings.ini"/>
+            <arg value="petr.kiryshkin@testmatick.com"/>
+            <arg value="Testmatick - DataTile testing results on ${base.url} (${browser})"/>
+            <jvmarg value="-Djava.awt.headless=true"/>
+        </java>
+    </target>
+
+    <target name="makePDFReportSendToAll" depends="generateXSLTReport">
+        <java jar="${lib.dir}${file.separator}htm2pdf.jar" fork="true">
+            <arg value="${report.dir}"/>
+            <arg value="${report.dir}"/>
+            <arg value="${report.dir}${file.separator}output-xslt${file.separator}overview-chart.jpg"/>
+            <arg value="${config.dir}${file.separator}mailSettings.ini"/>
+            <arg value="petr.kiryshkin@testmatick.com"/>
+            <arg value="Testmatick - DataTile testing results on ${base.url} (${browser})"/>
+            <jvmarg value="-Djava.awt.headless=true"/>
+        </java>
+    </target>
+
+    <target name="sendPDFReport" depends="makePDFReport, generateXSLTReport">
+        <java jar="${lib.dir}${file.separator}mailer-0.3.jar" fork="true">
+            <arg value="-configfile"/>
+            <arg value="${config.dir}${file.separator}mailSettings.ini"/>
+            <arg value="-from"/>
+            <arg value="petr.kiryshkin@testmatick.com"/>
+            <arg value="-subject"/>
+            <arg value="Testmatick - DataTile testing results"/>
+            <arg value="-insertimages"/>
+            <arg value="${report.dir}${file.separator}output-xslt"/>
+            <arg value="-attach"/>
+            <arg value="${build.dir}${file.separator}Report.pdf"/>
+        </java>
+    </target>
+
+    <target name="zipReport">
+        <zip basedir="${report.dir}"
+             destfile="${build.dir}${file.separator}report.zip"
+             whenempty="fail">
+        </zip>
+    </target>
+
+    <target name="sendZipReport" depends="zipReport, generateXSLTReport">
+        <java jar="${lib.dir}${file.separator}mailer-0.3.jar" fork="true">
+            <arg value="-configfile"/>
+            <arg value="${config.dir}${file.separator}mailSettings.ini"/>
+            <arg value="-from"/>
+            <arg value="petr.kiryshkin@testmatick.com"/>
+            <arg value="-subject"/>
+            <arg value="Testmatick - DataTile testing results"/>
+            <arg value="-insertimages"/>
+            <arg value="${report.dir}${file.separator}output-xslt"/>
+            <arg value="-attach"/>
+            <arg value="${build.dir}${file.separator}report.zip"/>
+        </java>
+    </target>
+
+</project>
+
+
+
+
